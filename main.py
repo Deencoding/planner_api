@@ -6,7 +6,7 @@ from planner_api.routes.users import user_router
 app = FastAPI(
     title="Event and User Management API", 
     description="An API for managing events and user authentication.",
-    version="1.0.0"
+    version="1.0.1"
 )
 
 # Add CORS middleware if needed

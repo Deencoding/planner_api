@@ -1,39 +1,20 @@
-from pydantic import BaseModel
-from typing import ClassVar, List
+from planner_api.databases.database import Base
+from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 
-class Event(BaseModel):
-    id: int
-    title: str
-    image: str
-    description: str
-    tags: List[str] 
-    location: str
+class Event(Base):
+    __tablename__ = "events"
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(255), nullable=False)
+    image = Column(String, nullable=True)
+    description = Column(String(1000), nullable=False)
+    # tags = Column(String(500), nullable=True)
+    location = Column (String(255), nullable=False)
+    created_by = Column(Integer, ForeignKey("users.id", ondelete='CASCADE'), nullable=False)
 
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "title": "Nurudeen's Birthday",
-                "image": "https://linktomyimage.com/image.png",
-                "description": "we will be giving out gifts to the celebrant!",
-                "tags": ["birthday", "age", "year", "month"],
-                "location": "Sheraton Hotel"
-            }
-        }
-class EventUpdate(BaseModel):
-    id: int
-    title: str | None
-    image: str | None 
-    description: str | None 
-    tags: List[str] | None
-    location: str | None  
-    
-    class config: 
-        json_schema_extra = {
-            "example": {
-                "title": "Nurudeen's Birthday",
-                "image": "https://linktomyimage.com/image.png",
-                "description": "we will be giving out gifts to the celebrant!",
-                "tags": ["birthday", "age", "year", "month"],
-                "location": "Sheraton Hotel"
-            }
-        }
+    # Define relationship with the User model
+    creator = relationship("User", back_populates = "events")
+
+    # @property
+    # def tag_list(self):
+    #     return self.tags.split(',') if self.tags else []
